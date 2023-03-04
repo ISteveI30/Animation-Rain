@@ -1,5 +1,5 @@
-/*spriteAnimations = [
-    "walk" = {
+spriteAnimations = [
+    "front" = {
         loc: [
             {x: 0, y:0 },
             {x: 48, y:0 },
@@ -11,4 +11,4 @@
 
         ]
     },
-];*/
+];
