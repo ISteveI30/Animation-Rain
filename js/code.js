@@ -6,7 +6,7 @@ const CANVAS_HEIGHT = canvas.height = 600;
 const spriteImg = new Image();
 spriteImg.src = '/img/sprite2.png'
 
-let playerStatus = 'front'; 
+let charatcerStatus = 'front2'; 
 
 const spriteWidth = 48;
 const spriteHeight = 48;
@@ -17,7 +17,7 @@ let frameX = 0;
 let frameY = 0;
 
 let animationFrame = 0;
-const staggerFrames  = 25;
+const staggerFrames  = 20;
 
 const typeCharacter=0
 
@@ -38,8 +38,23 @@ const animationStates = [
     {
         name: 'back',
         frames: 3,
-    }
-    
+    },
+    {
+        name: 'front2',
+        frames: 3,
+    },
+    { 
+        name: 'left2',
+        frames: 3,
+    },
+    {
+        name: 'right2',
+        frames: 3,
+    },
+    {
+        name: 'back2',
+        frames: 3,
+    }  
 ];
 
 animationStates.forEach((state,index) => {
@@ -54,36 +69,53 @@ animationStates.forEach((state,index) => {
     spriteAnimations[state.name] = frames;
 });
 
-function drawSprite(frameX,frameY){
+function drawSprite(frameX,frameY,posX,posY){
     ctx.drawImage(
         spriteImg, 
         frameX, 
         frameY, 
         spriteWidth, 
         spriteHeight, 
-        0, //posx
-        CANVAS_HEIGHT-zoomY, //posy
+        posX, 
+        posY, 
         zoomX, 
         zoomY
         );
 }
+let posX = -zoomX;
+let posY = CANVAS_HEIGHT-zoomY*3;
 
 function loopSprite(typeCharacter){
     let position = Math.floor(animationFrame/staggerFrames)
-     % spriteAnimations[playerStatus].loc.length; 
+     % spriteAnimations[charatcerStatus].loc.length; 
     //the variable position returns values equal to length
-    console.log(position)
     let type=typeCharacter;
     type +=position
     let frameX = spriteWidth * type
-    let frameY = spriteAnimations[playerStatus].loc[position].y;
-    drawSprite(frameX,frameY);
+    let frameY = spriteAnimations[charatcerStatus].loc[position].y;
+    direction();
+    drawSprite(frameX,frameY,posX,posY); 
+  
+}
+function direction(){
+    if(posX<(CANVAS_WIDTH/2)-zoomX){
+        posX++;
+        charatcerStatus = 'right';
+    }
+    if(posX>=(CANVAS_WIDTH/2)-zoomX){
+        posY++;
+        charatcerStatus = 'front'
+    }
+    if(posY>=CANVAS_HEIGHT-zoomY){
+        posY=CANVAS_HEIGHT-zoomY;
+    }
 }
 
 function animate(){
     ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
     ctx.fillStyle = 'gray';
     ctx.fillRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+
     loopSprite(typeCharacter);
     animationFrame++;
     requestAnimationFrame(animate);
