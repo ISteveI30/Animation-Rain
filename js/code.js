@@ -19,6 +19,8 @@ let frameY = 0;
 let animationFrame = 0;
 const staggerFrames  = 25;
 
+const typeCharacter=0
+
 const spriteAnimations = [];
 const animationStates = [
     {
@@ -55,27 +57,34 @@ animationStates.forEach((state,index) => {
 function drawSprite(frameX,frameY){
     ctx.drawImage(
         spriteImg, 
-        frameX , 
-        frameY , 
+        frameX, 
+        frameY, 
         spriteWidth, 
         spriteHeight, 
-        0, 
-        0, 
+        0, //posx
+        CANVAS_HEIGHT-zoomY, //posy
         zoomX, 
         zoomY
         );
 }
-function loopSprite(){
+
+function loopSprite(typeCharacter){
     let position = Math.floor(animationFrame/staggerFrames)
-     % spriteAnimations[playerStatus].loc.length;
-    let frameX = spriteWidth * position;
+     % spriteAnimations[playerStatus].loc.length; 
+    //the variable position returns values equal to length
+    console.log(position)
+    let type=typeCharacter;
+    type +=position
+    let frameX = spriteWidth * type
     let frameY = spriteAnimations[playerStatus].loc[position].y;
     drawSprite(frameX,frameY);
 }
 
 function animate(){
     ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
-    loopSprite();
+    ctx.fillStyle = 'gray';
+    ctx.fillRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+    loopSprite(typeCharacter);
     animationFrame++;
     requestAnimationFrame(animate);
 };
