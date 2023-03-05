@@ -110,15 +110,40 @@ function direction(){
         posY=CANVAS_HEIGHT-zoomY;
     }
 }
-let x=Math.random() * (CANVAS_WIDTH - 0) + 0
-let y=0
-function rain (){
-    ctx.fillStyle = 'black';
-    ctx.fillRect(x,y,2,5);
-    y+=2;
-    if(y+5>=CANVAS_HEIGHT)
-        y = CANVAS_WIDTH-5
-        //ctx.clearRect(x,y,2,5)
+
+const drops = []
+
+class Rain {
+    constructor() {
+        this.x= Math.random() * (CANVAS_WIDTH - 0) + 0;
+        this.y= -5;
+        this.w= 2;
+        this.h= 5;
+        this.dy= 5;
+        //this.gravity = .1;
+    }
+    draw(){
+        ctx.fillStyle = 'white';
+        ctx.fillRect(this.x,this.y,this.w,this.h);
+        this.move();
+    }
+    move(){
+        this.y+=this.dy;
+        //this.dy += this.gravity;
+        /*if(this.y+5>=CANVAS_HEIGHT)
+            this.y = CANVAS_WIDTH-5*/
+    }
+};
+
+function addRain(n){
+    for (let i = 0; i < n; i++) {
+        drops.push(new Rain());   
+    }
+}
+function drawRain(){
+    for (let i = 0; i < drops.length; i++) {
+        drops[i].draw();   
+    }
 }
 
 
@@ -126,9 +151,10 @@ function animate(){
     ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
     ctx.fillStyle = 'gray';
     ctx.fillRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
-
+    //let time=Math.floor( Math.random() * (10 - 0) + 0)
+    addRain(5);
+    drawRain();
     //loopSprite(typeCharacter);
-    rain();
     animationFrame++;
     requestAnimationFrame(animate);
 };
