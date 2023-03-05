@@ -110,13 +110,25 @@ function direction(){
         posY=CANVAS_HEIGHT-zoomY;
     }
 }
+let x=Math.random() * (CANVAS_WIDTH - 0) + 0
+let y=0
+function rain (){
+    ctx.fillStyle = 'black';
+    ctx.fillRect(x,y,2,5);
+    y+=2;
+    if(y+5>=CANVAS_HEIGHT)
+        y = CANVAS_WIDTH-5
+        //ctx.clearRect(x,y,2,5)
+}
+
 
 function animate(){
     ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
     ctx.fillStyle = 'gray';
     ctx.fillRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
 
-    loopSprite(typeCharacter);
+    //loopSprite(typeCharacter);
+    rain();
     animationFrame++;
     requestAnimationFrame(animate);
 };
