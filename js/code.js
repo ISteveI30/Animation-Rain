@@ -22,7 +22,9 @@ let frameY = 0;
 let animationFrame = 0;
 const staggerFrames  = 20;
 
-const typeCharacter=0
+const typeCharacter=0;
+//top row 0, 3, 6, 9
+//below row 0, 3, 6, 9 
 
 const drops = []
 
@@ -86,7 +88,6 @@ function stage(){
     );  
 }
 
-
 function drawSprite(frameX,frameY,posX,posY){
     ctx.drawImage(
         spriteImg, 
@@ -101,9 +102,13 @@ function drawSprite(frameX,frameY,posX,posY){
         );
 }
 let posX = -zoomX;
+
 let posY = CANVAS_HEIGHT-zoomY*2.7;
 
-function loopSprite(typeCharacter){
+let posX2 = CANVAS_WIDTH;
+
+function loopSprite(posX,typeCharacter,row){
+    direction(row);
     let position = Math.floor(animationFrame/staggerFrames)
      % spriteAnimations[charatcerStatus].loc.length; 
     //the variable position returns values equal to length
@@ -111,22 +116,34 @@ function loopSprite(typeCharacter){
     type +=position
     let frameX = spriteWidth * type
     let frameY = spriteAnimations[charatcerStatus].loc[position].y;
-    direction();
     drawSprite(frameX,frameY,posX,posY); 
 }
-function direction(){
-    if(posX<(CANVAS_WIDTH/2)-(zoomX*3/2)){
-        posX+=.7;
-        charatcerStatus = 'right';
-    }
-    if(posX>=(CANVAS_WIDTH/2)-(zoomX*3/2)){
-        posX=CANVAS_WIDTH/2-(zoomX*3/2);
-        //posY++;
-        charatcerStatus = 'front'
-    }/*
-    if(posY>=CANVAS_HEIGHT-zoomY){
-        posY=CANVAS_HEIGHT-zoomY;
-    }*/
+function direction(row){
+    switch (row) {
+        case 0:    
+            if(posX<(CANVAS_WIDTH/2)-(zoomX*3/2)){
+                posX+=.7;
+                charatcerStatus = 'right';
+            }
+            if(posX>=(CANVAS_WIDTH/2)-(zoomX*3/2)){
+                posX=CANVAS_WIDTH/2-(zoomX*3/2);
+                //posY++;
+                charatcerStatus = 'front'
+            }
+            break;
+        case 1:
+            if((CANVAS_WIDTH/2)<posX2){
+                posX2-=.7;
+                charatcerStatus = 'left2';
+            }
+            if(posX2<=(CANVAS_WIDTH/2)){
+                posX2=CANVAS_WIDTH/2;
+                charatcerStatus = 'front2'
+            }
+            break;
+        default:
+            break;
+    } 
 }
 
 
@@ -167,10 +184,12 @@ function deleteRain(){
         }
     }
 }
-let timer = 0;
+let timer = 0;//women
 let timer2 = 300;
+let timer3 = 0;//man
 function animate(){
     ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+
     ctx.beginPath();
     stage();
     ctx.lineWidth = 1;
@@ -180,23 +199,35 @@ function animate(){
     ctx.stroke();
     //ctx.fillStyle = 'gray';
     //ctx.fillRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+    
     //sound.play();
    
     if(timer==0){
+        
+       loopSprite(posX,typeCharacter,0)//women
         timer=0
-        loopSprite(typeCharacter);
     }
     else{
         timer--;
     }
-     /*
+
+    if(timer3==0){
+        
+        loopSprite(posX2,typeCharacter,1);//man
+        timer3=0
+        
+    }
+    else{
+        timer3--;
+    }
+    
     if(timer2==0){
         timer2=0
-        addRain(5);
+       // addRain(5);
     }
     else{
         timer2--;
-    }*/
+    }
     //addRain(5);
     drawRain();
     deleteRain();
