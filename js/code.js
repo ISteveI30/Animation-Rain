@@ -24,6 +24,10 @@ const staggerFrames  = 20;
 
 const typeCharacter=0
 
+const drops = []
+
+const sound = new Audio('/audio/flashback.mp3')
+
 const spriteAnimations = [];
 const animationStates = [
     {
@@ -82,6 +86,7 @@ function stage(){
     );  
 }
 
+
 function drawSprite(frameX,frameY,posX,posY){
     ctx.drawImage(
         spriteImg, 
@@ -108,15 +113,14 @@ function loopSprite(typeCharacter){
     let frameY = spriteAnimations[charatcerStatus].loc[position].y;
     direction();
     drawSprite(frameX,frameY,posX,posY); 
-  
 }
 function direction(){
-    if(posX<(CANVAS_WIDTH/2)-zoomX){
-        posX++;
+    if(posX<(CANVAS_WIDTH/2)-(zoomX*3/2)){
+        posX+=.7;
         charatcerStatus = 'right';
     }
-    if(posX>=(CANVAS_WIDTH/2)-zoomX){
-        posX=CANVAS_WIDTH/2-zoomX;
+    if(posX>=(CANVAS_WIDTH/2)-(zoomX*3/2)){
+        posX=CANVAS_WIDTH/2-(zoomX*3/2);
         //posY++;
         charatcerStatus = 'front'
     }/*
@@ -125,7 +129,6 @@ function direction(){
     }*/
 }
 
-const drops = []
 
 class Rain {
     constructor() {
@@ -164,17 +167,41 @@ function deleteRain(){
         }
     }
 }
-
+let timer = 0;
+let timer2 = 300;
 function animate(){
     ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
-    ctx.fillStyle = 'gray';
-    ctx.fillRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+    ctx.beginPath();
     stage();
-    loopSprite(typeCharacter);
-    addRain(5);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'white'
+    ctx.moveTo(CANVAS_WIDTH/2, 0);
+    ctx.lineTo(CANVAS_WIDTH/2, CANVAS_HEIGHT);
+    ctx.stroke();
+    //ctx.fillStyle = 'gray';
+    //ctx.fillRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+    //sound.play();
+   
+    if(timer==0){
+        timer=0
+        loopSprite(typeCharacter);
+    }
+    else{
+        timer--;
+    }
+     /*
+    if(timer2==0){
+        timer2=0
+        addRain(5);
+    }
+    else{
+        timer2--;
+    }*/
+    //addRain(5);
     drawRain();
     deleteRain();
     animationFrame++;
     requestAnimationFrame(animate);
+    
 };
 animate();
