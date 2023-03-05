@@ -1,17 +1,20 @@
 const canvas = document.getElementById('mycanvas');
 const ctx = canvas.getContext('2d');
-const CANVAS_WIDTH = canvas.width = 600;
+const CANVAS_WIDTH = canvas.width = 800;
 const CANVAS_HEIGHT = canvas.height = 600;
 
 const spriteImg = new Image();
 spriteImg.src = '/img/sprite2.png'
 
+const backgroundImg = new Image();
+backgroundImg.src = '/img/fondo2.jpg'
+
 let charatcerStatus = 'front2'; 
 
 const spriteWidth = 48;
 const spriteHeight = 48;
-const zoomX = 100;
-const zoomY = 100;
+const zoomX = 62;
+const zoomY = 62;
 
 let frameX = 0;
 let frameY = 0;
@@ -69,6 +72,16 @@ animationStates.forEach((state,index) => {
     spriteAnimations[state.name] = frames;
 });
 
+function stage(){
+    ctx.drawImage(
+        backgroundImg,
+        0,
+        0,
+        CANVAS_WIDTH,
+        CANVAS_HEIGHT
+    );  
+}
+
 function drawSprite(frameX,frameY,posX,posY){
     ctx.drawImage(
         spriteImg, 
@@ -83,7 +96,7 @@ function drawSprite(frameX,frameY,posX,posY){
         );
 }
 let posX = -zoomX;
-let posY = CANVAS_HEIGHT-zoomY*3;
+let posY = CANVAS_HEIGHT-zoomY*2.7;
 
 function loopSprite(typeCharacter){
     let position = Math.floor(animationFrame/staggerFrames)
@@ -103,12 +116,13 @@ function direction(){
         charatcerStatus = 'right';
     }
     if(posX>=(CANVAS_WIDTH/2)-zoomX){
-        posY++;
+        posX=CANVAS_WIDTH/2-zoomX;
+        //posY++;
         charatcerStatus = 'front'
-    }
+    }/*
     if(posY>=CANVAS_HEIGHT-zoomY){
         posY=CANVAS_HEIGHT-zoomY;
-    }
+    }*/
 }
 
 const drops = []
@@ -117,10 +131,10 @@ class Rain {
     constructor() {
         this.x= Math.random() * (CANVAS_WIDTH - 0) + 0;
         this.y= -5;
-        this.w= 2;
-        this.h= 5;
-        this.dy= 5;
-        //this.gravity = .1;
+        this.w= 1;
+        this.h= Math.random() * 5;
+        this.dy= Math.random() * 2;
+        this.gravity = 0.03;
     }
     draw(){
         ctx.fillStyle = 'white';
@@ -128,10 +142,8 @@ class Rain {
         this.move();
     }
     move(){
-        this.y+=this.dy;
-        //this.dy += this.gravity;
-        /*if(this.y+5>=CANVAS_HEIGHT)
-            this.y = CANVAS_WIDTH-5*/
+        this.y += this.dy;
+        this.dy += this.gravity;
     }
 };
 
@@ -145,16 +157,23 @@ function drawRain(){
         drops[i].draw();   
     }
 }
-
+function deleteRain(){
+    for (let i = 0; i < drops.length; i++) {
+        if(drops[i].y>CANVAS_HEIGHT-drops[i].h){
+           drops.splice(i,1);
+        }
+    }
+}
 
 function animate(){
     ctx.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
     ctx.fillStyle = 'gray';
     ctx.fillRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
-    //let time=Math.floor( Math.random() * (10 - 0) + 0)
+    stage();
+    loopSprite(typeCharacter);
     addRain(5);
     drawRain();
-    //loopSprite(typeCharacter);
+    deleteRain();
     animationFrame++;
     requestAnimationFrame(animate);
 };
